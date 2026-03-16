@@ -9,96 +9,62 @@
     <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Siemreap&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #f43f5e; /* Rose */
-            --primary-light: #fff1f2;
-            --primary-grad: linear-gradient(135deg, #f43f5e 0%, #fb923c 100%);
-            --secondary: #4f46e5; /* Indigo */
-            --secondary-light: #eef2ff;
-            --secondary-grad: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%);
-            --success: #10b981; /* Emerald */
-            --success-light: #ecfdf5;
-            --success-grad: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --primary: #f43f5e; --primary-light: #fff1f2; --primary-grad: linear-gradient(135deg, #f43f5e 0%, #fb923c 100%);
+            --secondary: #4f46e5; --secondary-light: #eef2ff; --secondary-grad: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%);
+            --success: #10b981; --success-light: #ecfdf5; --success-grad: linear-gradient(135deg, #10b981 0%, #34d399 100%);
             
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --input-bg: #f1f5f9;
-            --theme: var(--primary);
-            --theme-light: var(--primary-light);
-            --theme-grad: var(--primary-grad);
+            --bg: #f8fafc; --surface: #ffffff; --text-main: #1e293b; --text-muted: #64748b;
+            --border: #e2e8f0; --input-bg: #f1f5f9;
+            
+            --theme: var(--primary); --theme-light: var(--primary-light); --theme-grad: var(--primary-grad);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            margin: 0; padding: 0; 
-            background-color: var(--bg); 
-            font-family: 'Battambang', sans-serif; 
-            color: var(--text-main); 
-            display: flex; justify-content: center; 
-            min-height: 100vh;
+            margin: 0; padding: 0; background-color: var(--bg); 
+            font-family: 'Battambang', sans-serif; color: var(--text-main); 
+            display: flex; justify-content: center; min-height: 100vh;
         }
 
-        /* Typography */
         .font-title { font-family: 'Siemreap', sans-serif; }
         
-        /* Layout */
         .app-container { width: 100%; max-width: 420px; padding: 24px 16px; }
-        .main-card { 
-            background: var(--surface); 
-            border-radius: 28px; 
-            padding: 24px; 
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
-        }
+        .main-card { background: var(--surface); border-radius: 28px; padding: 24px; box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); }
 
         /* Header */
         .header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
         .icon-box { 
-            width: 48px; height: 48px; border-radius: 14px; 
-            display: flex; align-items: center; justify-content: center; 
-            background: var(--theme-light); color: var(--theme); 
-            transition: all 0.4s ease;
+            width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; 
+            background: var(--theme-light); color: var(--theme); transition: all 0.4s ease;
         }
         .header-title { font-size: 24px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
         .header-sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
 
         /* Tabs */
-        .tabs { 
-            display: flex; gap: 8px; margin-bottom: 28px; 
-            background: var(--bg); padding: 6px; border-radius: 16px;
-        }
+        .tabs { display: flex; gap: 8px; margin-bottom: 28px; background: var(--bg); padding: 6px; border-radius: 16px; }
         .tab-btn { 
-            flex: 1; border: none; background: transparent; padding: 12px 0; 
-            font-size: 13px; font-weight: 700; border-radius: 12px; 
-            color: var(--text-muted); cursor: pointer; transition: all 0.3s ease;
+            flex: 1; border: none; background: transparent; padding: 12px 0; font-size: 13px; font-weight: 700; 
+            border-radius: 12px; color: var(--text-muted); cursor: pointer; transition: all 0.3s ease; font-family: 'Siemreap';
         }
-        .tab-btn.active { 
-            background: var(--surface); color: var(--theme); 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
-        }
+        .tab-btn.active { background: var(--surface); color: var(--theme); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 
         /* Form Inputs */
         .form-group { margin-bottom: 20px; animation: fadeIn 0.4s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         
-        label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; margin-left: 4px; }
+        label { display: flex; align-items: center; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; margin-left: 4px; font-family: 'Siemreap'; }
         
         .input-wrapper { position: relative; }
         .input-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; display: flex; transition: 0.3s; }
         
         input, select, textarea { 
-            width: 100%; padding: 16px 16px 16px 44px; border-radius: 16px; 
-            border: 2px solid transparent; background: var(--input-bg); 
-            font-size: 16px; font-weight: 600; color: var(--text-main); 
+            width: 100%; padding: 16px 16px 16px 44px; border-radius: 16px; border: 2px solid transparent; 
+            background: var(--input-bg); font-size: 16px; font-weight: 600; color: var(--text-main); 
             outline: none; transition: all 0.3s ease; font-family: 'Battambang', sans-serif;
         }
         input::placeholder, textarea::placeholder { color: #cbd5e1; font-weight: 400; }
-        input:focus, select:focus, textarea:focus { 
-            background: var(--surface); border-color: var(--theme); 
-            box-shadow: 0 0 0 4px var(--theme-light); 
-        }
+        input:focus, select:focus, textarea:focus { background: var(--surface); border-color: var(--theme); box-shadow: 0 0 0 4px var(--theme-light); }
         input:focus + .input-icon { color: var(--theme); }
         
         select { padding-left: 16px; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 16px center; background-size: 16px; }
@@ -106,37 +72,53 @@
         .row { display: flex; gap: 12px; }
         .col { flex: 1; }
 
+        /* Hourly Rate Alert */
+        .rate-alert {
+            background: var(--theme-light); border-radius: 16px; padding: 12px 16px; margin-top: -8px; margin-bottom: 20px;
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        .rate-header { display: flex; justify-content: space-between; align-items: center; }
+        .rate-title { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: 'Siemreap'; }
+        .rate-main { font-size: 18px; font-weight: 900; color: var(--theme); }
+        .rate-sub { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); border-top: 1px solid rgba(0,0,0,0.05); padding-top: 6px; }
+
+        /* OT Section Toggles */
+        .ot-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .ot-toggles { display: flex; background: var(--input-bg); padding: 4px; border-radius: 12px; }
+        .ot-toggle-btn {
+            padding: 6px 12px; border: none; background: transparent; font-size: 11px; font-weight: 700; font-family: 'Siemreap';
+            border-radius: 8px; color: var(--text-muted); cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 4px;
+        }
+        .ot-toggle-btn.active { background: var(--surface); color: var(--theme); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
         /* Smart Paste Specifics */
         .paste-area-wrapper { position: relative; }
         textarea { min-height: 100px; padding: 16px; resize: none; border: 2px dashed #cbd5e1; line-height: 1.5; }
         textarea:focus { border-style: solid; }
+        .paste-area.has-text { border-color: var(--theme); background: var(--theme-light); border-style: solid; }
         .clear-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; color: #cbd5e1; cursor: pointer; padding: 0; display: none; }
-        textarea:not(:placeholder-shown) + .clear-btn { display: block; }
-        .clear-btn:hover { color: var(--primary); }
+        .paste-area.has-text + .clear-btn { display: block; }
+        .clear-btn:hover { color: var(--theme); }
 
-        .log-box { 
-            background: var(--surface); border: 1px solid var(--border); 
-            border-radius: 12px; padding: 12px; margin-top: 12px; font-size: 11px; 
-            display: none;
-        }
+        .log-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 12px; font-size: 11px; display: none; }
         .log-line { display: flex; justify-content: space-between; margin-bottom: 6px; color: var(--text-muted); }
         .log-line:last-child { margin-bottom: 0; }
         .log-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
         .log-vals span { font-weight: 700; margin-left: 6px; }
 
-        .ot-summary { 
-            display: flex; justify-content: space-between; background: var(--bg); 
-            border-radius: 16px; padding: 12px; margin-top: 12px; text-align: center;
-        }
-        .ot-col { flex: 1; border-right: 1px solid var(--border); }
+        .ot-summary { display: flex; justify-content: space-between; background: var(--text-main); border-radius: 16px; padding: 12px; margin-top: 12px; text-align: center; }
+        .ot-col { flex: 1; border-right: 1px solid rgba(255,255,255,0.1); }
         .ot-col:last-child { border-right: none; }
-        .ot-label { font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
-        .ot-val { font-size: 14px; font-weight: 700; color: var(--text-main); }
+        .ot-label { font-size: 10px; font-weight: 700; color: #94a3b8; margin-bottom: 4px; font-family: 'Siemreap'; }
+        .ot-val { font-size: 16px; font-weight: 700; color: #ffffff; }
         .ot-money { font-size: 10px; font-weight: 700; margin-top: 2px; }
+
+        /* Manual Input Hints */
+        .manual-hint { font-size: 10px; font-weight: bold; margin-top: 6px; margin-left: 6px; display: none; }
 
         /* Currency Toggle */
         .curr-toggle { display: flex; background: var(--input-bg); padding: 4px; border-radius: 12px; margin-bottom: 20px; }
-        .curr-btn { flex: 1; border: none; background: transparent; padding: 8px 0; font-size: 13px; font-weight: 700; border-radius: 10px; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .curr-btn { flex: 1; border: none; background: transparent; padding: 8px 0; font-size: 13px; font-weight: 700; font-family: 'Siemreap'; border-radius: 10px; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
         .curr-btn.active { background: var(--surface); color: var(--theme); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
         /* Result Card */
@@ -150,17 +132,14 @@
             background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%); 
             pointer-events: none; 
         }
-        .res-header { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; margin-bottom: 16px; display: flex; align-items: center; }
+        .res-header { font-size: 12px; font-weight: 900; opacity: 0.8; margin-bottom: 16px; display: flex; align-items: center; font-family: 'Siemreap'; }
         .res-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 10px; opacity: 0.9; align-items: center; }
         .res-row strong { font-size: 15px; opacity: 1; }
         .res-total-wrap { border-top: 1px solid rgba(255,255,255,0.2); margin-top: 16px; padding-top: 16px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .res-total-label { font-size: 14px; opacity: 0.9; padding-bottom: 4px; }
+        .res-total-label { font-size: 15px; opacity: 0.9; padding-bottom: 4px; font-family: 'Siemreap'; }
         .res-total-val { font-size: 36px; font-weight: 900; line-height: 1; letter-spacing: -1px; }
         
         .hidden { display: none !important; }
-        .flex { display: flex; }
-        .items-center { align-items: center; }
-        .justify-between { justify-content: space-between; }
     </style>
 </head>
 <body>
@@ -174,8 +153,8 @@
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><path d="M16 14v4"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
             </div>
             <div>
-                <h1 class="header-title font-title">គណនាផ្សេងៗ</h1>
-                <div class="header-sub">គណនារហ័ស និងងាយស្រួល</div>
+                <h1 class="header-title font-title">កម្មវិធីគណនារហ័ស</h1>
+                <div class="header-sub">គណនារហ័ស និង ងាយស្រួល ហើយត្រឹមត្រូវ</div>
             </div>
         </div>
 
@@ -198,68 +177,109 @@
         <!-- ==================== SALARY TAB ==================== -->
         <div id="salaryContent">
             <div class="form-group">
-                <label class="font-title">ប្រាក់ខែគោល (Base Salary)</label>
+                <label>ប្រាក់ខែគោល (Base Salary)</label>
                 <div class="input-wrapper">
                     <div class="input-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
                     <input type="number" id="baseSalary" placeholder="0.00" oninput="calcSalary()">
                 </div>
             </div>
             
-            <div class="row form-group">
+            <div class="row form-group" style="margin-bottom: 24px;">
                 <div class="col">
-                    <label class="font-title">ថ្ងៃធ្វើការ/ខែ</label>
+                    <label>ថ្ងៃធ្វើការ/ខែ</label>
                     <div class="input-wrapper">
                         <div class="input-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-                        <input type="number" id="workDays" value="26" oninput="calcSalary()">
+                        <input type="number" id="workDays" value="26" oninput="calcSalary()" style="padding-left: 40px;">
                     </div>
                 </div>
                 <div class="col">
-                    <label class="font-title">ម៉ោង/ថ្ងៃ</label>
+                    <label>ម៉ោង/ថ្ងៃ</label>
                     <div class="input-wrapper">
                         <div class="input-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-                        <input type="number" id="workHours" value="8" oninput="calcSalary()">
+                        <input type="number" id="workHours" value="8" oninput="calcSalary()" style="padding-left: 40px;">
                     </div>
+                </div>
+            </div>
+
+            <!-- អត្រាប្រាក់ក្នុង ១ ម៉ោង (លាក់ជាធម្មតា បង្ហាញពេលវាយប្រាក់ខែ) -->
+            <div id="rateAlert" class="rate-alert hidden">
+                <div class="rate-header">
+                    <span class="rate-title">អត្រា 1ម៉ោង (100%)</span>
+                    <span class="rate-main" id="rate100">$0.00</span>
+                </div>
+                <div class="rate-sub">
+                    <span>150% = <strong style="color:var(--text-main)" id="rate150">$0.00</strong></span>
+                    <span>200% = <strong style="color:var(--text-main)" id="rate200">$0.00</strong></span>
                 </div>
             </div>
 
             <!-- Smart Paste Section -->
-            <div class="form-group">
-                <div class="flex justify-between items-center mb-2">
-                    <label class="font-title" style="margin:0;">ម៉ោងថែម (Paste អត្ថបទ)</label>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--theme)" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-                </div>
-                <div class="paste-area-wrapper">
-                    <textarea id="pasteText" placeholder="Copy ម៉ោងរបស់អ្នកហើយ Paste ទីនេះ...&#10;" oninput="parseOT()"></textarea>
-                    <button class="clear-btn" onclick="clearPaste()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></button>
-                </div>
-                
-                <div id="otLogs" class="log-box"></div>
-                
-                <div id="otSummary" class="ot-summary hidden">
-                    <div class="ot-col">
-                        <div class="ot-label font-title">150%</div>
-                        <div class="ot-val" id="sum150h">0h</div>
-                        <div class="ot-money" style="color: #f97316;" id="sum150m">=$0.00</div>
+            <div class="form-group" style="padding-top: 16px; border-top: 1px solid var(--border);">
+                <div class="ot-header">
+                    <label style="margin:0;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--theme)" stroke-width="2" style="margin-right:6px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                        ម៉ោងថែម (OT)
+                    </label>
+                    <div class="ot-toggles">
+                        <button id="modeManualBtn" class="ot-toggle-btn" onclick="toggleOTMode('manual')">វាយលេខ</button>
+                        <button id="modePasteBtn" class="ot-toggle-btn active" onclick="toggleOTMode('paste')">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.912 5.813a2 2 0 001.275 1.275L21 12l-5.813 1.912a2 2 0 00-1.275 1.275L12 21l-1.912-5.813a2 2 0 00-1.275-1.275L3 12l5.813-1.912a2 2 0 001.275-1.275L12 3z"/></svg> Paste
+                        </button>
                     </div>
-                    <div class="ot-col">
-                        <div class="ot-label font-title">200%</div>
-                        <div class="ot-val" id="sum200h">0h</div>
-                        <div class="ot-money" style="color: #e11d48;" id="sum200m">=$0.00</div>
+                </div>
+
+                <!-- Paste Mode UI -->
+                <div id="modePasteUI">
+                    <div class="paste-area-wrapper">
+                        <textarea id="pasteText" class="paste-area" placeholder="Copy ម៉ោងរបស់អ្នកហើយ Paste ទីនេះ...&#10;" oninput="parseOT()"></textarea>
+                        <button class="clear-btn" onclick="clearPaste()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                        </button>
                     </div>
-                    <div class="ot-col">
-                        <div class="ot-label font-title">លុយបាយ</div>
-                        <div class="ot-val" style="color: #10b981;" id="sumMeal">$0.00</div>
+                    
+                    <div id="otLogs" class="log-box"></div>
+                    
+                    <div id="otSummary" class="ot-summary hidden">
+                        <div class="ot-col">
+                            <div class="ot-label">150%</div>
+                            <div class="ot-val"><span id="sum150h">0</span><span style="font-size:10px;font-weight:normal;">h</span></div>
+                            <div class="ot-money" style="color: #f97316;" id="sum150m">+$0.00</div>
+                        </div>
+                        <div class="ot-col">
+                            <div class="ot-label">200%</div>
+                            <div class="ot-val"><span id="sum200h">0</span><span style="font-size:10px;font-weight:normal;">h</span></div>
+                            <div class="ot-money" style="color: #e11d48;" id="sum200m">+$0.00</div>
+                        </div>
+                        <div class="ot-col">
+                            <div class="ot-label">លុយបាយ</div>
+                            <div class="ot-val" style="color: #10b981;" id="sumMeal">$0.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Mode UI (វាយដោយដៃ) -->
+                <div id="modeManualUI" class="row hidden">
+                    <div class="col">
+                        <label>150% (ម៉ោង)</label>
+                        <input type="number" id="manual150" placeholder="0" oninput="handleManualOT()" style="padding-left:16px;">
+                        <div id="hint150" class="manual-hint" style="color: #f97316;">+$0.00</div>
+                    </div>
+                    <div class="col">
+                        <label>200% (ម៉ោង)</label>
+                        <input type="number" id="manual200" placeholder="0" oninput="handleManualOT()" style="padding-left:16px;">
+                        <div id="hint200" class="manual-hint" style="color: #e11d48;">+$0.00</div>
                     </div>
                 </div>
             </div>
 
+            <!-- ប្រាក់បន្ថែម និងកាត់ -->
             <div class="row form-group" style="margin-bottom: 0;">
                 <div class="col">
-                    <label class="font-title flex items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" style="margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> ប្រាក់បន្ថែម</label>
+                    <label><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" style="margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> ប្រាក់បន្ថែម (បាយ)</label>
                     <input type="number" id="bonus" placeholder="0.00" style="padding-left: 16px;" oninput="calcSalary()">
                 </div>
                 <div class="col">
-                    <label class="font-title flex items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" style="margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg> កាត់ពន្ធ</label>
+                    <label><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" style="margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg> កាត់ពន្ធ/ផ្សេងៗ</label>
                     <input type="number" id="deduct" placeholder="0.00" style="padding-left: 16px;" oninput="calcSalary()">
                 </div>
             </div>
@@ -267,13 +287,13 @@
 
         <!-- ==================== INTEREST TAB ==================== -->
         <div id="interestContent" class="hidden">
-            <div class="curr-toggle font-title">
+            <div class="curr-toggle">
                 <button id="currUsd" class="curr-btn active" onclick="setCurrency('USD')">ដុល្លារ ($)</button>
                 <button id="currKhr" class="curr-btn" onclick="setCurrency('KHR')">ប្រាក់រៀល (៛)</button>
             </div>
 
             <div class="form-group">
-                <label class="font-title">ប្រាក់ដើមសរុប</label>
+                <label>ប្រាក់ដើមសរុប</label>
                 <div class="input-wrapper">
                     <div class="input-icon" id="prinIcon" style="font-weight: bold; font-size: 18px;">$</div>
                     <input type="number" id="principal" placeholder="0" oninput="calcInterest()">
@@ -282,7 +302,7 @@
 
             <div class="row form-group">
                 <div class="col" style="flex: 1.5;">
-                    <label class="font-title">អត្រាការប្រាក់ (%)</label>
+                    <label>អត្រាការប្រាក់ (%)</label>
                     <div class="input-wrapper">
                         <div class="input-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div>
                         <input type="number" id="intRate" placeholder="0.0" oninput="calcInterest()">
@@ -299,7 +319,7 @@
 
             <div class="row form-group" style="margin-bottom: 0;">
                 <div class="col" style="flex: 1.5;">
-                    <label class="font-title">រយៈពេល</label>
+                    <label>រយៈពេល</label>
                     <div class="input-wrapper">
                         <div class="input-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
                         <input type="number" id="duration" placeholder="0" oninput="calcInterest()">
@@ -318,14 +338,14 @@
         <!-- ==================== DISCOUNT TAB ==================== -->
         <div id="discountContent" class="hidden">
             <div class="form-group">
-                <label class="font-title">តម្លៃដើមរបស់ទំនិញ</label>
+                <label>តម្លៃដើមរបស់ទំនិញ</label>
                 <div class="input-wrapper">
                     <div class="input-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
                     <input type="number" id="origPrice" placeholder="0.00" oninput="calcDiscount()">
                 </div>
             </div>
             <div class="form-group" style="margin-bottom: 0;">
-                <label class="font-title">ភាគរយបញ្ចុះតម្លៃ (%)</label>
+                <label>ភាគរយបញ្ចុះតម្លៃ (%)</label>
                 <div class="input-wrapper">
                     <div class="input-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div>
                     <input type="number" id="discPercent" placeholder="0.0" oninput="calcDiscount()">
@@ -335,7 +355,7 @@
 
         <!-- ==================== RESULT CARD ==================== -->
         <div id="resultCard" class="result-card">
-            <div class="res-header font-title">
+            <div class="res-header">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;"><polyline points="9 18 15 12 9 6"/></svg>
                 <span id="resTitle">លទ្ធផលប្រាក់ខែសរុប</span>
             </div>
@@ -346,7 +366,7 @@
             <div id="rRowDe" class="res-row hidden"><span>ប្រាក់កាត់</span><strong id="rVD">-$0.00</strong></div>
             
             <div class="res-total-wrap">
-                <span class="res-total-label font-title" id="rLT">ប្រាក់ខែជាក់ស្តែង៖</span>
+                <span class="res-total-label" id="rLT">ប្រាក់ខែជាក់ស្តែង៖</span>
                 <span class="res-total-val" id="rVT">$0.00</span>
             </div>
         </div>
@@ -355,11 +375,13 @@
 </div>
 
 <script>
-    // App Logic (Vanilla JS)
+    // App Logic
     let currentTab = 'salary';
+    let otMode = 'paste';
     let curr = 'USD';
-    let ot150 = 0, ot200 = 0, otMeal = 0;
-    let hourlyRate = 0;
+    
+    // Global data
+    let sData = { base: 0, hr: 0, r150: 0, r200: 0, ot150h: 0, ot200h: 0, otMeal: 0 };
 
     function updateTheme(tab) {
         const root = document.documentElement;
@@ -403,6 +425,23 @@
         calcInterest();
     }
 
+    // Toggle OT Mode (Paste / Manual)
+    function toggleOTMode(mode) {
+        otMode = mode;
+        document.getElementById('modePasteBtn').classList.toggle('active', mode === 'paste');
+        document.getElementById('modeManualBtn').classList.toggle('active', mode === 'manual');
+        
+        if(mode === 'paste') {
+            document.getElementById('modePasteUI').classList.remove('hidden');
+            document.getElementById('modeManualUI').classList.add('hidden');
+            parseOT(); // Re-calculate based on paste text
+        } else {
+            document.getElementById('modePasteUI').classList.add('hidden');
+            document.getElementById('modeManualUI').classList.remove('hidden');
+            handleManualOT(); // Re-calculate based on manual inputs
+        }
+    }
+
     function clearPaste() {
         const ta = document.getElementById('pasteText');
         ta.value = '';
@@ -420,7 +459,7 @@
             ta.classList.remove('has-text');
             logBox.style.display = 'none'; 
             summary.classList.add('hidden');
-            ot150 = 0; ot200 = 0; otMeal = 0; 
+            sData.ot150h = 0; sData.ot200h = 0; sData.otMeal = 0; 
             document.getElementById('bonus').value = '';
             calcSalary(); return; 
         }
@@ -457,19 +496,25 @@
             }
         });
 
-        ot150 = t150/60; ot200 = t200/60; otMeal = tMeal;
+        sData.ot150h = t150/60; sData.ot200h = t200/60; sData.otMeal = tMeal;
         
         if(hasValidLine) {
             logBox.innerHTML = html; logBox.style.display = 'block';
-            document.getElementById('sum150h').innerText = ot150 + 'h';
-            document.getElementById('sum200h').innerText = ot200 + 'h';
-            document.getElementById('sumMeal').innerText = '$' + fmt(otMeal);
+            document.getElementById('sum150h').innerText = sData.ot150h;
+            document.getElementById('sum200h').innerText = sData.ot200h;
+            document.getElementById('sumMeal').innerText = '$' + fmt(sData.otMeal);
             summary.classList.remove('hidden');
         } else {
             logBox.style.display = 'none'; summary.classList.add('hidden');
         }
 
-        document.getElementById('bonus').value = otMeal > 0 ? otMeal : '';
+        document.getElementById('bonus').value = sData.otMeal > 0 ? sData.otMeal : '';
+        calcSalary();
+    }
+
+    function handleManualOT() {
+        sData.ot150h = parseFloat(document.getElementById('manual150').value) || 0;
+        sData.ot200h = parseFloat(document.getElementById('manual200').value) || 0;
         calcSalary();
     }
 
@@ -503,16 +548,36 @@
         const ex = parseFloat(document.getElementById('bonus').value) || 0;
         const de = parseFloat(document.getElementById('deduct').value) || 0;
 
-        hourlyRate = b>0 ? (b/d)/h : 0;
-        const otAmt150 = ot150 * hourlyRate * 1.5;
-        const otAmt200 = ot200 * hourlyRate * 2;
+        sData.base = b;
+        sData.hr = b > 0 ? (b/d)/h : 0;
+        sData.r150 = sData.hr * 1.5;
+        sData.r200 = sData.hr * 2.0;
+
+        // Show/Hide Hourly Rate Alert
+        const alertBox = document.getElementById('rateAlert');
+        if(b > 0) {
+            alertBox.classList.remove('hidden');
+            document.getElementById('rate100').innerText = '$' + fmt(sData.hr);
+            document.getElementById('rate150').innerText = '$' + fmt(sData.r150);
+            document.getElementById('rate200').innerText = '$' + fmt(sData.r200);
+        } else {
+            alertBox.classList.add('hidden');
+        }
+
+        const otAmt150 = sData.ot150h * sData.r150;
+        const otAmt200 = sData.ot200h * sData.r200;
         const otAmt = otAmt150 + otAmt200;
         const net = b + otAmt + ex - de;
 
-        // Update Summary Money if visible
-        if(!document.getElementById('otSummary').classList.contains('hidden')) {
-            document.getElementById('sum150m').innerText = '=$' + fmt(otAmt150);
-            document.getElementById('sum200m').innerText = '=$' + fmt(otAmt200);
+        // Update Summary Money or Hint Money based on mode
+        if(otMode === 'paste') {
+            document.getElementById('sum150m').innerText = '+$' + fmt(otAmt150);
+            document.getElementById('sum200m').innerText = '+$' + fmt(otAmt200);
+        } else {
+            const h150 = document.getElementById('hint150');
+            const h200 = document.getElementById('hint200');
+            if(otAmt150 > 0) { h150.style.display = 'block'; h150.innerText = '+$' + fmt(otAmt150); } else h150.style.display = 'none';
+            if(otAmt200 > 0) { h200.style.display = 'block'; h200.innerText = '+$' + fmt(otAmt200); } else h200.style.display = 'none';
         }
 
         updateRes('ប្រាក់ខែគោល', '$'+fmt(b), otAmt>0?'+$'+fmt(otAmt):null, ex>0?'+$'+fmt(ex):null, de>0?'-$'+fmt(de):null, 'ប្រាក់ខែជាក់ស្តែង៖', '$'+fmt(net));
