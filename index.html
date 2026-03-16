@@ -1,526 +1,549 @@
-import React, { useState, useEffect } from 'react';
-import { Calculator, Percent, DollarSign, Clock, Tag, Briefcase, PlusCircle, MinusCircle, Timer, Calendar, ChevronRight, Sparkles, ClipboardPaste, XCircle } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Siemreap&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f43f5e; /* Rose */
+            --primary-light: #fff1f2;
+            --primary-grad: linear-gradient(135deg, #f43f5e 0%, #fb923c 100%);
+            --secondary: #4f46e5; /* Indigo */
+            --secondary-light: #eef2ff;
+            --secondary-grad: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%);
+            --success: #10b981; /* Emerald */
+            --success-light: #ecfdf5;
+            --success-grad: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --input-bg: #f1f5f9;
+            --theme: var(--primary);
+            --theme-light: var(--primary-light);
+            --theme-grad: var(--primary-grad);
+        }
 
-export default function App() {
-  const [activeTab, setActiveTab] = useState('salary');
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            margin: 0; padding: 0; 
+            background-color: var(--bg); 
+            font-family: 'Battambang', sans-serif; 
+            color: var(--text-main); 
+            display: flex; justify-content: center; 
+            min-height: 100vh;
+        }
 
-  // ==========================================
-  // States - Salary
-  // ==========================================
-  const [baseSalary, setBaseSalary] = useState('');
-  const [workingDays, setWorkingDays] = useState('26');
-  const [workingHours, setWorkingHours] = useState('8');
-  
-  const [otMode, setOtMode] = useState('paste'); 
-  const [ot150Hours, setOt150Hours] = useState('');
-  const [ot200Hours, setOt200Hours] = useState('');
-  
-  const [allowances, setAllowances] = useState('');
-  const [deductions, setDeductions] = useState('');
+        /* Typography */
+        .font-title { font-family: 'Siemreap', sans-serif; }
+        
+        /* Layout */
+        .app-container { width: 100%; max-width: 420px; padding: 24px 16px; }
+        .main-card { 
+            background: var(--surface); 
+            border-radius: 28px; 
+            padding: 24px; 
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
 
-  const [pastedText, setPastedText] = useState('');
-  const [parsedLog, setParsedLog] = useState([]);
+        /* Header */
+        .header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+        .icon-box { 
+            width: 48px; height: 48px; border-radius: 14px; 
+            display: flex; align-items: center; justify-content: center; 
+            background: var(--theme-light); color: var(--theme); 
+            transition: all 0.4s ease;
+        }
+        .header-title { font-size: 24px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
+        .header-sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
 
-  // ==========================================
-  // States - Interest & Discount
-  // ==========================================
-  const [currency, setCurrency] = useState('USD');
-  const [principal, setPrincipal] = useState('');
-  const [rate, setRate] = useState('');
-  const [rateType, setRateType] = useState('month');
-  const [duration, setDuration] = useState('');
-  const [durationType, setDurationType] = useState('month');
+        /* Tabs */
+        .tabs { 
+            display: flex; gap: 8px; margin-bottom: 28px; 
+            background: var(--bg); padding: 6px; border-radius: 16px;
+        }
+        .tab-btn { 
+            flex: 1; border: none; background: transparent; padding: 12px 0; 
+            font-size: 13px; font-weight: 700; border-radius: 12px; 
+            color: var(--text-muted); cursor: pointer; transition: all 0.3s ease;
+        }
+        .tab-btn.active { 
+            background: var(--surface); color: var(--theme); 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+        }
 
-  const [originalPrice, setOriginalPrice] = useState('');
-  const [discountPercent, setDiscountPercent] = useState('');
+        /* Form Inputs */
+        .form-group { margin-bottom: 20px; animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; margin-left: 4px; }
+        
+        .input-wrapper { position: relative; }
+        .input-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; display: flex; transition: 0.3s; }
+        
+        input, select, textarea { 
+            width: 100%; padding: 16px 16px 16px 44px; border-radius: 16px; 
+            border: 2px solid transparent; background: var(--input-bg); 
+            font-size: 16px; font-weight: 600; color: var(--text-main); 
+            outline: none; transition: all 0.3s ease; font-family: 'Battambang', sans-serif;
+        }
+        input::placeholder, textarea::placeholder { color: #cbd5e1; font-weight: 400; }
+        input:focus, select:focus, textarea:focus { 
+            background: var(--surface); border-color: var(--theme); 
+            box-shadow: 0 0 0 4px var(--theme-light); 
+        }
+        input:focus + .input-icon { color: var(--theme); }
+        
+        select { padding-left: 16px; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 16px center; background-size: 16px; }
 
-  // ==========================================
-  // Logic: Smart Parser
-  // ==========================================
-  useEffect(() => {
-    if (otMode !== 'paste') return;
+        .row { display: flex; gap: 12px; }
+        .col { flex: 1; }
 
-    if (!pastedText.trim()) {
-      setOt150Hours('');
-      setOt200Hours('');
-      setAllowances('');
-      setParsedLog([]);
-      return;
+        /* Smart Paste Specifics */
+        .paste-area-wrapper { position: relative; }
+        textarea { min-height: 100px; padding: 16px; resize: none; border: 2px dashed #cbd5e1; line-height: 1.5; }
+        textarea:focus { border-style: solid; }
+        .clear-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; color: #cbd5e1; cursor: pointer; padding: 0; display: none; }
+        textarea:not(:placeholder-shown) + .clear-btn { display: block; }
+        .clear-btn:hover { color: var(--primary); }
+
+        .log-box { 
+            background: var(--surface); border: 1px solid var(--border); 
+            border-radius: 12px; padding: 12px; margin-top: 12px; font-size: 11px; 
+            display: none;
+        }
+        .log-line { display: flex; justify-content: space-between; margin-bottom: 6px; color: var(--text-muted); }
+        .log-line:last-child { margin-bottom: 0; }
+        .log-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+        .log-vals span { font-weight: 700; margin-left: 6px; }
+
+        .ot-summary { 
+            display: flex; justify-content: space-between; background: var(--bg); 
+            border-radius: 16px; padding: 12px; margin-top: 12px; text-align: center;
+        }
+        .ot-col { flex: 1; border-right: 1px solid var(--border); }
+        .ot-col:last-child { border-right: none; }
+        .ot-label { font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
+        .ot-val { font-size: 14px; font-weight: 700; color: var(--text-main); }
+        .ot-money { font-size: 10px; font-weight: 700; margin-top: 2px; }
+
+        /* Currency Toggle */
+        .curr-toggle { display: flex; background: var(--input-bg); padding: 4px; border-radius: 12px; margin-bottom: 20px; }
+        .curr-btn { flex: 1; border: none; background: transparent; padding: 8px 0; font-size: 13px; font-weight: 700; border-radius: 10px; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .curr-btn.active { background: var(--surface); color: var(--theme); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+        /* Result Card */
+        .result-card { 
+            margin-top: 32px; padding: 24px; border-radius: 24px; color: #fff; 
+            background: var(--theme-grad); position: relative; overflow: hidden; 
+            box-shadow: 0 15px 30px -10px var(--theme-light); transition: all 0.4s ease;
+        }
+        .result-card::after { 
+            content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; 
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%); 
+            pointer-events: none; 
+        }
+        .res-header { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; margin-bottom: 16px; display: flex; align-items: center; }
+        .res-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 10px; opacity: 0.9; align-items: center; }
+        .res-row strong { font-size: 15px; opacity: 1; }
+        .res-total-wrap { border-top: 1px solid rgba(255,255,255,0.2); margin-top: 16px; padding-top: 16px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .res-total-label { font-size: 14px; opacity: 0.9; padding-bottom: 4px; }
+        .res-total-val { font-size: 36px; font-weight: 900; line-height: 1; letter-spacing: -1px; }
+        
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="main-card">
+        
+        <!-- Header -->
+        <div class="header">
+            <div id="headerIcon" class="icon-box">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><path d="M16 14v4"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
+            </div>
+            <div>
+                <h1 class="header-title font-title">គណនាផ្សេងៗ</h1>
+                <div class="header-sub">គណនារហ័ស និងងាយស្រួល</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs font-title">
+            <button class="tab-btn active" onclick="switchTab('salary', this)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block; margin: 0 auto 4px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                ប្រាក់ខែ
+            </button>
+            <button class="tab-btn" onclick="switchTab('interest', this)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block; margin: 0 auto 4px;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                ការប្រាក់
+            </button>
+            <button class="tab-btn" onclick="switchTab('discount', this)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block; margin: 0 auto 4px;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                Promotion
+            </button>
+        </div>
+
+        <!-- ==================== SALARY TAB ==================== -->
+        <div id="salaryContent">
+            <div class="form-group">
+                <label class="font-title">ប្រាក់ខែគោល (Base Salary)</label>
+                <div class="input-wrapper">
+                    <div class="input-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                    <input type="number" id="baseSalary" placeholder="0.00" oninput="calcSalary()">
+                </div>
+            </div>
+            
+            <div class="row form-group">
+                <div class="col">
+                    <label class="font-title">ថ្ងៃធ្វើការ/ខែ</label>
+                    <div class="input-wrapper">
+                        <div class="input-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+                        <input type="number" id="workDays" value="26" oninput="calcSalary()">
+                    </div>
+                </div>
+                <div class="col">
+                    <label class="font-title">ម៉ោង/ថ្ងៃ</label>
+                    <div class="input-wrapper">
+                        <div class="input-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                        <input type="number" id="workHours" value="8" oninput="calcSalary()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Smart Paste Section -->
+            <div class="form-group">
+                <div class="flex justify-between items-center mb-2">
+                    <label class="font-title" style="margin:0;">ម៉ោងថែម (Paste អត្ថបទ)</label>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--theme)" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                </div>
+                <div class="paste-area-wrapper">
+                    <textarea id="pasteText" placeholder="Copy ម៉ោងរបស់អ្នកហើយ Paste ទីនេះ...&#10;" oninput="parseOT()"></textarea>
+                    <button class="clear-btn" onclick="clearPaste()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></button>
+                </div>
+                
+                <div id="otLogs" class="log-box"></div>
+                
+                <div id="otSummary" class="ot-summary hidden">
+                    <div class="ot-col">
+                        <div class="ot-label font-title">150%</div>
+                        <div class="ot-val" id="sum150h">0h</div>
+                        <div class="ot-money" style="color: #f97316;" id="sum150m">=$0.00</div>
+                    </div>
+                    <div class="ot-col">
+                        <div class="ot-label font-title">200%</div>
+                        <div class="ot-val" id="sum200h">0h</div>
+                        <div class="ot-money" style="color: #e11d48;" id="sum200m">=$0.00</div>
+                    </div>
+                    <div class="ot-col">
+                        <div class="ot-label font-title">លុយបាយ</div>
+                        <div class="ot-val" style="color: #10b981;" id="sumMeal">$0.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row form-group" style="margin-bottom: 0;">
+                <div class="col">
+                    <label class="font-title flex items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" style="margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> ប្រាក់បន្ថែម</label>
+                    <input type="number" id="bonus" placeholder="0.00" style="padding-left: 16px;" oninput="calcSalary()">
+                </div>
+                <div class="col">
+                    <label class="font-title flex items-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" style="margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg> កាត់ពន្ធ</label>
+                    <input type="number" id="deduct" placeholder="0.00" style="padding-left: 16px;" oninput="calcSalary()">
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== INTEREST TAB ==================== -->
+        <div id="interestContent" class="hidden">
+            <div class="curr-toggle font-title">
+                <button id="currUsd" class="curr-btn active" onclick="setCurrency('USD')">ដុល្លារ ($)</button>
+                <button id="currKhr" class="curr-btn" onclick="setCurrency('KHR')">ប្រាក់រៀល (៛)</button>
+            </div>
+
+            <div class="form-group">
+                <label class="font-title">ប្រាក់ដើមសរុប</label>
+                <div class="input-wrapper">
+                    <div class="input-icon" id="prinIcon" style="font-weight: bold; font-size: 18px;">$</div>
+                    <input type="number" id="principal" placeholder="0" oninput="calcInterest()">
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col" style="flex: 1.5;">
+                    <label class="font-title">អត្រាការប្រាក់ (%)</label>
+                    <div class="input-wrapper">
+                        <div class="input-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div>
+                        <input type="number" id="intRate" placeholder="0.0" oninput="calcInterest()">
+                    </div>
+                </div>
+                <div class="col">
+                    <label style="color: transparent;">.</label>
+                    <select id="intRateType" onchange="calcInterest()">
+                        <option value="month">/ ខែ</option>
+                        <option value="year">/ ឆ្នាំ</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group" style="margin-bottom: 0;">
+                <div class="col" style="flex: 1.5;">
+                    <label class="font-title">រយៈពេល</label>
+                    <div class="input-wrapper">
+                        <div class="input-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                        <input type="number" id="duration" placeholder="0" oninput="calcInterest()">
+                    </div>
+                </div>
+                <div class="col">
+                    <label style="color: transparent;">.</label>
+                    <select id="durationType" onchange="calcInterest()">
+                        <option value="month">ខែ</option>
+                        <option value="year">ឆ្នាំ</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== DISCOUNT TAB ==================== -->
+        <div id="discountContent" class="hidden">
+            <div class="form-group">
+                <label class="font-title">តម្លៃដើមរបស់ទំនិញ</label>
+                <div class="input-wrapper">
+                    <div class="input-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
+                    <input type="number" id="origPrice" placeholder="0.00" oninput="calcDiscount()">
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="font-title">ភាគរយបញ្ចុះតម្លៃ (%)</label>
+                <div class="input-wrapper">
+                    <div class="input-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div>
+                    <input type="number" id="discPercent" placeholder="0.0" oninput="calcDiscount()">
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== RESULT CARD ==================== -->
+        <div id="resultCard" class="result-card">
+            <div class="res-header font-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;"><polyline points="9 18 15 12 9 6"/></svg>
+                <span id="resTitle">លទ្ធផលប្រាក់ខែសរុប</span>
+            </div>
+
+            <div class="res-row"><span id="rL1">ប្រាក់ខែគោល</span><span id="rV1">$0.00</span></div>
+            <div id="rRowOT" class="res-row hidden"><span>ថែមម៉ោង (OT)</span><strong id="rVO">+$0.00</strong></div>
+            <div id="rRowEx" class="res-row hidden"><span>ប្រាក់បន្ថែម</span><strong id="rVE">+$0.00</strong></div>
+            <div id="rRowDe" class="res-row hidden"><span>ប្រាក់កាត់</span><strong id="rVD">-$0.00</strong></div>
+            
+            <div class="res-total-wrap">
+                <span class="res-total-label font-title" id="rLT">ប្រាក់ខែជាក់ស្តែង៖</span>
+                <span class="res-total-val" id="rVT">$0.00</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // App Logic (Vanilla JS)
+    let currentTab = 'salary';
+    let curr = 'USD';
+    let ot150 = 0, ot200 = 0, otMeal = 0;
+    let hourlyRate = 0;
+
+    function updateTheme(tab) {
+        const root = document.documentElement;
+        if(tab === 'salary') {
+            root.style.setProperty('--theme', 'var(--primary)');
+            root.style.setProperty('--theme-light', 'var(--primary-light)');
+            root.style.setProperty('--theme-grad', 'var(--primary-grad)');
+        } else if(tab === 'interest') {
+            root.style.setProperty('--theme', 'var(--secondary)');
+            root.style.setProperty('--theme-light', 'var(--secondary-light)');
+            root.style.setProperty('--theme-grad', 'var(--secondary-grad)');
+        } else {
+            root.style.setProperty('--theme', 'var(--success)');
+            root.style.setProperty('--theme-light', 'var(--success-light)');
+            root.style.setProperty('--theme-grad', 'var(--success-grad)');
+        }
     }
 
-    const lines = pastedText.split('\n');
-    let total150Mins = 0;
-    let total200Mins = 0;
-    let totalMealMoney = 0;
-    let logs = [];
-
-    const timeRegex = /(\d{1,2})[:;](\d{2})\s*-\s*(\d{1,2})[:;](\d{2})/;
-    const moneyRegex = /\((\d+(?:\.\d+)?)\$\)/;
-
-    lines.forEach((line, index) => {
-      const timeMatch = line.match(timeRegex);
-      const moneyMatch = line.match(moneyRegex);
-
-      let line150Mins = 0;
-      let line200Mins = 0;
-      let lineMoney = 0;
-      let foundSomething = false;
-
-      if (timeMatch) {
-        foundSomething = true;
-        const h1 = parseInt(timeMatch[1]);
-        const m1 = parseInt(timeMatch[2]);
-        const h2 = parseInt(timeMatch[3]);
-        const m2 = parseInt(timeMatch[4]);
-
-        const inMins = h1 * 60 + m1;
-        let outMins = h2 * 60 + m2;
-
-        if (outMins <= inMins) outMins += 24 * 60;
-
-        for (let i = inMins; i < outMins; i++) {
-          let currentDayMin = i % (24 * 60);
-          if (currentDayMin >= 1080 && currentDayMin < 1320) {
-            line150Mins++;
-          } else if (currentDayMin >= 1320 || currentDayMin < 360) {
-            line200Mins++;
-          } else {
-            line150Mins++; 
-          }
-        }
-        total150Mins += line150Mins;
-        total200Mins += line200Mins;
-      }
-
-      if (moneyMatch) {
-        foundSomething = true;
-        lineMoney = parseFloat(moneyMatch[1]);
-        totalMealMoney += lineMoney;
-      }
-
-      if (foundSomething) {
-        logs.push({
-          line: index + 1,
-          text: line.trim(),
-          h150: line150Mins > 0 ? (line150Mins / 60).toFixed(1) : 0,
-          h200: line200Mins > 0 ? (line200Mins / 60).toFixed(1) : 0,
-          money: lineMoney
-        });
-      }
-    });
-
-    const final150H = total150Mins / 60;
-    const final200H = total200Mins / 60;
-
-    setOt150Hours(final150H > 0 ? final150H.toString() : '');
-    setOt200Hours(final200H > 0 ? final200H.toString() : '');
-    setAllowances(totalMealMoney > 0 ? totalMealMoney.toString() : '');
-    setParsedLog(logs);
-
-  }, [pastedText, otMode]);
-
-  // ==========================================
-  // Calculations
-  // ==========================================
-  const calculateSalary = () => {
-    const base = parseFloat(baseSalary) || 0;
-    const days = parseFloat(workingDays) || 26;
-    const hours = parseFloat(workingHours) || 8;
-    const allow = parseFloat(allowances) || 0;
-    const deduct = parseFloat(deductions) || 0;
-    
-    const hourlyRate = base > 0 ? (base / days) / hours : 0;
-    const rate150 = hourlyRate * 1.5;
-    const rate200 = hourlyRate * 2.0;
-    
-    const h150 = parseFloat(ot150Hours) || 0;
-    const h200 = parseFloat(ot200Hours) || 0;
-    
-    const ot150Amount = h150 * rate150;
-    const ot200Amount = h200 * rate200;
-    const totalOT = ot150Amount + ot200Amount;
-    
-    const netSalary = base + totalOT + allow - deduct;
-    
-    return { base, hourlyRate, rate150, rate200, allow, deduct, totalOT, ot150Amount, ot200Amount, netSalary };
-  };
-
-  const calculateInterest = () => {
-    const p = parseFloat(principal) || 0;
-    let r = parseFloat(rate) || 0;
-    let t = parseFloat(duration) || 0;
-    let ratePerMonth = rateType === 'year' ? r / 12 : r;
-    let durationInMonths = durationType === 'year' ? t * 12 : t;
-    const totalInterest = p * (ratePerMonth / 100) * durationInMonths;
-    const totalAmount = p + totalInterest;
-    return { totalInterest, totalAmount };
-  };
-
-  const calculateDiscount = () => {
-    const price = parseFloat(originalPrice) || 0;
-    const disc = parseFloat(discountPercent) || 0;
-    const discountAmount = price * (disc / 100);
-    const finalPrice = price - discountAmount;
-    return { discountAmount, finalPrice };
-  };
-
-  const { base, hourlyRate, rate150, rate200, allow, deduct, totalOT, ot150Amount, ot200Amount, netSalary } = calculateSalary();
-  const { totalInterest, totalAmount } = calculateInterest();
-  const { discountAmount, finalPrice } = calculateDiscount();
-
-  const formatNumber = (num, curr = 'USD') => {
-    if (curr === 'KHR') return num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-    return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  };
-  const getCurrencySymbol = (curr) => curr === 'USD' ? '$' : '៛';
-
-  return (
-    <div style={styles.container}>
-      <div style={styles.appCard}>
+    function switchTab(tab, btn) {
+        currentTab = tab;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
         
-        {/* Header */}
-        <div style={styles.header}>
-          <div style={{...styles.iconWrapper, ...(activeTab === 'salary' ? styles.bgRose : activeTab === 'interest' ? styles.bgIndigo : styles.bgEmerald)}}>
-            <Calculator size={22} color={activeTab === 'salary' ? '#e11d48' : activeTab === 'interest' ? '#4f46e5' : '#059669'} />
-          </div>
-          <div>
-            <h1 style={styles.title}>Smart Calc</h1>
-            <p style={styles.subtitle}>គណនារហ័ស និងងាយស្រួល</p>
-          </div>
-        </div>
+        ['salary', 'interest', 'discount'].forEach(t => {
+            document.getElementById(t + 'Content').classList.add('hidden');
+        });
+        document.getElementById(tab + 'Content').classList.remove('hidden');
+        
+        updateTheme(tab);
+        
+        if(tab === 'salary') { document.getElementById('resTitle').innerText = 'លទ្ធផលប្រាក់ខែសរុប'; calcSalary(); }
+        else if(tab === 'interest') { document.getElementById('resTitle').innerText = 'លទ្ធផលគណនាការប្រាក់'; calcInterest(); }
+        else { document.getElementById('resTitle').innerText = 'លទ្ធផលបញ្ចុះតម្លៃ'; calcDiscount(); }
+    }
 
-        {/* Tabs */}
-        <div style={styles.tabsContainer}>
-          <button style={{...styles.tabButton, ...(activeTab === 'salary' ? styles.tabActiveRose : {})}} onClick={() => setActiveTab('salary')}>
-            <Briefcase size={18} style={styles.tabIcon} /> ប្រាក់ខែ
-          </button>
-          <button style={{...styles.tabButton, ...(activeTab === 'interest' ? styles.tabActiveIndigo : {})}} onClick={() => setActiveTab('interest')}>
-            <DollarSign size={18} style={styles.tabIcon} /> ការប្រាក់
-          </button>
-          <button style={{...styles.tabButton, ...(activeTab === 'discount' ? styles.tabActiveEmerald : {})}} onClick={() => setActiveTab('discount')}>
-            <Tag size={18} style={styles.tabIcon} /> Promotion
-          </button>
-        </div>
+    function setCurrency(c) {
+        curr = c;
+        document.getElementById('currUsd').classList.toggle('active', c === 'USD');
+        document.getElementById('currKhr').classList.toggle('active', c === 'KHR');
+        document.getElementById('prinIcon').innerText = c === 'USD' ? '$' : '៛';
+        calcInterest();
+    }
 
-        {/* Content */}
-        <div style={styles.content}>
-          
-          {/* ==================== SALARY TAB ==================== */}
-          {activeTab === 'salary' && (
-            <div style={styles.tabContent}>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>ប្រាក់ខែគោល (Base Salary)</label>
-                <div style={styles.inputWrapper}>
-                  <DollarSign size={18} style={styles.inputIcon} />
-                  <input type="number" value={baseSalary} onChange={e => setBaseSalary(e.target.value)} placeholder="0.00" style={{...styles.input, ...styles.inputLarge, paddingLeft: '36px'}} />
-                </div>
-              </div>
+    function clearPaste() {
+        const ta = document.getElementById('pasteText');
+        ta.value = '';
+        ta.classList.remove('has-text');
+        parseOT();
+    }
 
-              <div style={styles.row}>
-                <div style={styles.col}>
-                  <label style={styles.label}>ថ្ងៃធ្វើការ/ខែ</label>
-                  <div style={styles.inputWrapper}>
-                    <Calendar size={14} style={styles.inputIcon} />
-                    <input type="number" value={workingDays} onChange={e => setWorkingDays(e.target.value)} style={{...styles.input, paddingLeft: '32px'}} />
-                  </div>
-                </div>
-                <div style={styles.col}>
-                  <label style={styles.label}>ម៉ោងធ្វើការ/ថ្ងៃ</label>
-                  <div style={styles.inputWrapper}>
-                    <Clock size={14} style={styles.inputIcon} />
-                    <input type="number" value={workingHours} onChange={e => setWorkingHours(e.target.value)} style={{...styles.input, paddingLeft: '32px'}} />
-                  </div>
-                </div>
-              </div>
+    function parseOT() {
+        const text = document.getElementById('pasteText').value;
+        const ta = document.getElementById('pasteText');
+        const logBox = document.getElementById('otLogs');
+        const summary = document.getElementById('otSummary');
+        
+        if(!text.trim()) { 
+            ta.classList.remove('has-text');
+            logBox.style.display = 'none'; 
+            summary.classList.add('hidden');
+            ot150 = 0; ot200 = 0; otMeal = 0; 
+            document.getElementById('bonus').value = '';
+            calcSalary(); return; 
+        }
+        
+        ta.classList.add('has-text');
+        let t150 = 0, t200 = 0, tMeal = 0, html = '<div class="font-title" style="font-weight:700; color:var(--text-muted); margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:4px;">លទ្ធផលអាន៖</div>';
+        let hasValidLine = false;
 
-              {base > 0 && (
-                <div style={styles.rateCard}>
-                  <div style={styles.rateHeader}>
-                    <span>អត្រា 1ម៉ោង (100%)</span>
-                    <span style={styles.rateValueRose}>${formatNumber(hourlyRate)}</span>
-                  </div>
-                  <div style={styles.rateFooter}>
-                    <span>150% = <strong style={{color: '#334155'}}>${formatNumber(rate150)}</strong></span>
-                    <span>200% = <strong style={{color: '#334155'}}>${formatNumber(rate200)}</strong></span>
-                  </div>
-                </div>
-              )}
+        const tRegex = /(\d{1,2})[:;](\d{2})\s*-\s*(\d{1,2})[:;](\d{2})/;
+        const mRegex = /\((\d+(?:\.\d+)?)\$\)/;
 
-              <div style={styles.sectionHeader}>
-                <label style={styles.sectionTitle}>ម៉ោងថែម (OT)</label>
-                <div style={styles.toggleGroup}>
-                  <button style={otMode === 'manual' ? styles.toggleActiveRose : styles.toggleBtn} onClick={() => setOtMode('manual')}>វាយលេខ</button>
-                  <button style={otMode === 'paste' ? styles.toggleActiveRose : styles.toggleBtn} onClick={() => setOtMode('paste')}><ClipboardPaste size={10} style={{marginRight: 4}}/> Paste</button>
-                </div>
-              </div>
+        text.split('\n').forEach(line => {
+            const tm = line.match(tRegex), mm = line.match(mRegex);
+            let l150 = 0, l200 = 0, lM = 0, found = false;
 
-              {otMode === 'paste' ? (
-                <div>
-                  <div style={{position: 'relative'}}>
-                    <textarea 
-                      value={pastedText} 
-                      onChange={e => setPastedText(e.target.value)} 
-                      placeholder="ឧទាហរណ៍៖\nសុក្រទី14=5h 18:00-23:00(3$)" 
-                      style={pastedText ? styles.textareaActive : styles.textarea} 
-                    />
-                    {pastedText && <button style={styles.clearBtn} onClick={() => setPastedText('')}><XCircle size={16}/></button>}
-                  </div>
-                  {parsedLog.length > 0 && (
-                    <div style={styles.logCard}>
-                      <div style={styles.logTitle}>លទ្ធផលអាន៖</div>
-                      {parsedLog.map((log, i) => (
-                        <div key={i} style={styles.logRow}>
-                          <span style={styles.logText}>- {log.text}</span>
-                          <div style={styles.logValues}>
-                            {log.h150 > 0 && <span style={{color: '#f97316'}}>{log.h150}h</span>}
-                            {log.h200 > 0 && <span style={{color: '#e11d48'}}>{log.h200}h</span>}
-                            {log.money > 0 && <span style={{color: '#10b981'}}>+${log.money}</span>}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {(ot150Amount > 0 || ot200Amount > 0) && (
-                    <div style={styles.otResultCard}>
-                      <div style={styles.otResultCol}>
-                        <div style={styles.otResultLabel}>150%</div>
-                        <div style={styles.otResultHours}>{parseFloat(ot150Hours) || 0}h</div>
-                        <div style={styles.otResultMoneyOrange}>= ${formatNumber(ot150Amount)}</div>
-                      </div>
-                      <div style={{...styles.otResultCol, ...styles.borderLeftRight}}>
-                        <div style={styles.otResultLabel}>200%</div>
-                        <div style={styles.otResultHours}>{parseFloat(ot200Hours) || 0}h</div>
-                        <div style={styles.otResultMoneyRose}>= ${formatNumber(ot200Amount)}</div>
-                      </div>
-                      <div style={styles.otResultCol}>
-                        <div style={styles.otResultLabel}>ប្រាក់បាយ</div>
-                        <div style={styles.otResultMoneyEmerald}>${formatNumber(parseFloat(allowances) || 0)}</div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div style={styles.row}>
-                  <div style={styles.colRelative}>
-                    <label style={styles.label}>150% (ម៉ោង)</label>
-                    <input type="number" value={ot150Hours} onChange={e => setOt150Hours(e.target.value)} placeholder="0" style={styles.input} />
-                    {ot150Amount > 0 && <div style={styles.floatingMoneyOrange}>+ ${formatNumber(ot150Amount)}</div>}
-                  </div>
-                  <div style={styles.colRelative}>
-                    <label style={styles.label}>200% (ម៉ោង)</label>
-                    <input type="number" value={ot200Hours} onChange={e => setOt200Hours(e.target.value)} placeholder="0" style={styles.input} />
-                    {ot200Amount > 0 && <div style={styles.floatingMoneyRose}>+ ${formatNumber(ot200Amount)}</div>}
-                  </div>
-                </div>
-              )}
+            if(tm) {
+                found = true; hasValidLine = true;
+                let s = parseInt(tm[1])*60 + parseInt(tm[2]), e = parseInt(tm[3])*60 + parseInt(tm[4]);
+                if(e <= s) e += 1440;
+                for(let i=s; i<e; i++) {
+                    let m = i % 1440;
+                    if(m >= 1080 && m < 1320) l150++; else l200++;
+                }
+                t150 += l150; t200 += l200;
+            }
+            if(mm) { found = true; lM = parseFloat(mm[1]); tMeal += lM; }
 
-              <div style={styles.rowTopMargin}>
-                <div style={styles.col}>
-                  <label style={styles.labelWithIcon}><PlusCircle size={12} color="#10b981" style={{marginRight: 4}} /> លុយបាយ/Bonus</label>
-                  <input type="number" value={allowances} onChange={e => setAllowances(e.target.value)} placeholder="0.00" style={styles.input} />
-                </div>
-                <div style={styles.col}>
-                  <label style={styles.labelWithIcon}><MinusCircle size={12} color="#fb7185" style={{marginRight: 4}} /> កាត់ពន្ធ/ផ្សេងៗ</label>
-                  <input type="number" value={deductions} onChange={e => setDeductions(e.target.value)} placeholder="0.00" style={styles.input} />
-                </div>
-              </div>
-            </div>
-          )}
+            if(found) {
+                html += `<div class="log-line"><span class="log-text">- ${line.trim()}</span><div class="log-vals">`;
+                if(l150>0) html += `<span style="color:#f97316">${(l150/60).toFixed(1)}h</span>`;
+                if(l200>0) html += `<span style="color:#e11d48">${(l200/60).toFixed(1)}h</span>`;
+                if(lM>0) html += `<span style="color:#10b981">+$${lM}</span>`;
+                html += `</div></div>`;
+            }
+        });
 
-          {/* ==================== INTEREST TAB ==================== */}
-          {activeTab === 'interest' && (
-             <div style={styles.tabContent}>
-               <div style={styles.currencyToggle}>
-                 <button style={currency === 'USD' ? styles.currencyActive : styles.currencyBtn} onClick={() => setCurrency('USD')}>ដុល្លារ ($)</button>
-                 <button style={currency === 'KHR' ? styles.currencyActive : styles.currencyBtn} onClick={() => setCurrency('KHR')}>រៀល (៛)</button>
-               </div>
-               <div style={styles.inputGroup}>
-                 <label style={styles.label}>ប្រាក់ដើមសរុប</label>
-                 <div style={styles.inputWrapper}>
-                   <div style={styles.inputIcon}>{currency === 'USD' ? <DollarSign size={18} color="#94a3b8"/> : <span style={{fontWeight: 'bold', color: '#94a3b8'}}>៛</span>}</div>
-                   <input type="number" value={principal} onChange={e => setPrincipal(e.target.value)} placeholder="0" style={{...styles.input, paddingLeft: '32px'}}/>
-                 </div>
-               </div>
-               <div style={styles.rowFlex}>
-                 <div style={{flex: 1.5, marginRight: '12px'}}>
-                   <label style={styles.label}>អត្រាការប្រាក់</label>
-                   <div style={styles.inputWrapper}>
-                     <Percent size={14} style={styles.inputIcon} />
-                     <input type="number" value={rate} onChange={e => setRate(e.target.value)} placeholder="0.0" style={{...styles.input, paddingLeft: '32px'}}/>
-                   </div>
-                 </div>
-                 <div style={{flex: 1}}>
-                   <label style={{...styles.label, color: 'transparent'}}>.</label>
-                   <select value={rateType} onChange={e => setRateType(e.target.value)} style={styles.select}>
-                     <option value="month">/ ខែ</option><option value="year">/ ឆ្នាំ</option>
-                   </select>
-                 </div>
-               </div>
-               <div style={styles.rowFlex}>
-                 <div style={{flex: 1.5, marginRight: '12px'}}>
-                   <label style={styles.label}>រយៈពេល</label>
-                   <div style={styles.inputWrapper}>
-                     <Clock size={14} style={styles.inputIcon} />
-                     <input type="number" value={duration} onChange={e => setDuration(e.target.value)} placeholder="0" style={{...styles.input, paddingLeft: '32px'}}/>
-                   </div>
-                 </div>
-                 <div style={{flex: 1}}>
-                   <label style={{...styles.label, color: 'transparent'}}>.</label>
-                   <select value={durationType} onChange={e => setDurationType(e.target.value)} style={styles.select}>
-                     <option value="month">ខែ</option><option value="year">ឆ្នាំ</option>
-                   </select>
-                 </div>
-               </div>
-             </div>
-          )}
+        ot150 = t150/60; ot200 = t200/60; otMeal = tMeal;
+        
+        if(hasValidLine) {
+            logBox.innerHTML = html; logBox.style.display = 'block';
+            document.getElementById('sum150h').innerText = ot150 + 'h';
+            document.getElementById('sum200h').innerText = ot200 + 'h';
+            document.getElementById('sumMeal').innerText = '$' + fmt(otMeal);
+            summary.classList.remove('hidden');
+        } else {
+            logBox.style.display = 'none'; summary.classList.add('hidden');
+        }
 
-          {/* ==================== DISCOUNT TAB ==================== */}
-          {activeTab === 'discount' && (
-            <div style={styles.tabContent}>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>តម្លៃដើមរបស់ទំនិញ</label>
-                <div style={styles.inputWrapper}>
-                  <Tag size={18} style={styles.inputIcon} />
-                  <input type="number" value={originalPrice} onChange={e => setOriginalPrice(e.target.value)} placeholder="0.00" style={{...styles.input, paddingLeft: '36px'}}/>
-                </div>
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>ភាគរយបញ្ចុះតម្លៃ (%)</label>
-                <div style={styles.inputWrapper}>
-                  <Percent size={18} style={styles.inputIcon} />
-                  <input type="number" value={discountPercent} onChange={e => setDiscountPercent(e.target.value)} placeholder="0.0" style={{...styles.input, paddingLeft: '36px'}}/>
-                </div>
-              </div>
-            </div>
-          )}
+        document.getElementById('bonus').value = otMeal > 0 ? otMeal : '';
+        calcSalary();
+    }
 
-          {/* ==================== RESULT CARD ==================== */}
-          <div style={{...styles.resultCard, ...(activeTab === 'salary' ? styles.bgGradRose : activeTab === 'interest' ? styles.bgGradIndigo : styles.bgGradEmerald)}}>
-            <Sparkles size={80} color="rgba(255,255,255,0.1)" strokeWidth={1} style={{position: 'absolute', top: -8, right: -8}} />
-            
-            <h3 style={styles.resultTitle}>
-              <ChevronRight size={12} style={{marginRight: 4}} />
-              {activeTab === 'salary' ? 'លទ្ធផលប្រាក់ខែសរុប' : activeTab === 'interest' ? 'លទ្ធផលគណនាការប្រាក់' : 'លទ្ធផលបញ្ចុះតម្លៃ'}
-            </h3>
+    function fmt(n, c = 'USD') { return (c==='KHR'?Math.round(n):n).toLocaleString('en-US',{minimumFractionDigits:c==='KHR'?0:2, maximumFractionDigits:c==='KHR'?0:2}); }
+    function sym(c) { return c === 'USD' ? '$' : '៛'; }
 
-            <div style={{position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', gap: '8px'}}>
-              
-              {activeTab === 'salary' && (
-                <>
-                  <div style={styles.resultRow}><span>ប្រាក់ខែគោល៖</span><span>${formatNumber(base)}</span></div>
-                  {totalOT > 0 && <div style={styles.resultRow}><span>ថែមម៉ោង (OT)៖</span><strong>+ ${formatNumber(totalOT)}</strong></div>}
-                  {allow > 0 && <div style={styles.resultRow}><span>ប្រាក់បាយ/Bonus៖</span><strong>+ ${formatNumber(allow)}</strong></div>}
-                  {deduct > 0 && <div style={styles.resultRow}><span>ប្រាក់កាត់៖</span><strong>- ${formatNumber(deduct)}</strong></div>}
-                  <div style={styles.resultTotalRow}>
-                    <span style={styles.resultTotalLabel}>ប្រាក់ខែជាក់ស្តែង៖</span>
-                    <span style={styles.resultTotalValue}>${formatNumber(netSalary)}</span>
-                  </div>
-                </>
-              )}
+    function updateRes(r1L, r1V, otV, exV, deV, rtL, rtV, isLineThrough = false) {
+        document.getElementById('rL1').innerText = r1L;
+        const rv1 = document.getElementById('rV1');
+        rv1.innerText = r1V;
+        rv1.style.textDecoration = isLineThrough ? 'line-through' : 'none';
+        rv1.style.opacity = isLineThrough ? '0.6' : '1';
 
-              {activeTab === 'interest' && (
-                <>
-                  <div style={styles.resultRow}><span>ប្រាក់ដើម៖</span><span>{getCurrencySymbol(currency)}{formatNumber(parseFloat(principal) || 0, currency)}</span></div>
-                  <div style={styles.resultRow}><span>ការប្រាក់សរុប៖</span><strong>+ {getCurrencySymbol(currency)}{formatNumber(totalInterest, currency)}</strong></div>
-                  <div style={styles.resultTotalRow}>
-                    <span style={styles.resultTotalLabel}>សរុប៖</span>
-                    <span style={styles.resultTotalValue}>{getCurrencySymbol(currency)}{formatNumber(totalAmount, currency)}</span>
-                  </div>
-                </>
-              )}
+        const rOT = document.getElementById('rRowOT');
+        if(otV) { rOT.classList.remove('hidden'); document.getElementById('rVO').innerText = otV; } else rOT.classList.add('hidden');
 
-              {activeTab === 'discount' && (
-                <>
-                  <div style={styles.resultRow}><span>តម្លៃដើម៖</span><span style={{textDecoration: 'line-through', opacity: 0.7}}>${formatNumber(parseFloat(originalPrice) || 0)}</span></div>
-                  <div style={styles.resultRow}><span>ទឹកប្រាក់បានបញ្ចុះ៖</span><strong>- ${formatNumber(discountAmount)}</strong></div>
-                  <div style={styles.resultTotalRow}>
-                    <span style={styles.resultTotalLabel}>ត្រូវបង់៖</span>
-                    <span style={styles.resultTotalValue}>${formatNumber(finalPrice)}</span>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
+        const rEx = document.getElementById('rRowEx');
+        if(exV) { rEx.classList.remove('hidden'); document.getElementById('rVE').innerText = exV; } else rEx.classList.add('hidden');
 
-        </div>
-      </div>
-    </div>
-  );
-}
+        const rDe = document.getElementById('rRowDe');
+        if(deV) { rDe.classList.remove('hidden'); document.getElementById('rVD').innerText = deV; } else rDe.classList.add('hidden');
 
-// ==========================================
-// CSS STYLES (Plain JS Objects)
-// ==========================================
-const styles = {
-  container: { minHeight: '100vh', backgroundColor: '#ffffff', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px 0', fontFamily: '"Battambang", sans-serif', color: '#1e293b' },
-  appCard: { width: '100%', maxWidth: '400px', padding: '0 20px', boxSizing: 'border-box' },
-  header: { paddingTop: '8px', paddingBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' },
-  iconWrapper: { padding: '10px', borderRadius: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center' },
-  bgRose: { backgroundColor: '#fff1f2' },
-  bgIndigo: { backgroundColor: '#eef2ff' },
-  bgEmerald: { backgroundColor: '#ecfdf5' },
-  title: { fontSize: '20px', fontWeight: 'bold', margin: 0, letterSpacing: '-0.5px', fontFamily: '"Siemreap", sans-serif' },
-  subtitle: { fontSize: '12px', color: '#94a3b8', margin: '2px 0 0 0' },
-  tabsContainer: { display: 'flex', borderBottom: '1px solid #f1f5f9', marginBottom: '24px' },
-  tabButton: { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '12px 0', fontSize: '12px', background: 'none', border: 'none', borderBottom: '2px solid transparent', color: '#94a3b8', cursor: 'pointer', fontFamily: '"Siemreap", sans-serif' },
-  tabActiveRose: { color: '#e11d48', borderBottomColor: '#e11d48', fontWeight: 'bold' },
-  tabActiveIndigo: { color: '#4f46e5', borderBottomColor: '#4f46e5', fontWeight: 'bold' },
-  tabActiveEmerald: { color: '#059669', borderBottomColor: '#059669', fontWeight: 'bold' },
-  tabIcon: { marginBottom: '4px' },
-  content: { paddingBottom: '32px' },
-  tabContent: { display: 'flex', flexDirection: 'column', gap: '16px' },
-  inputGroup: { display: 'flex', flexDirection: 'column', gap: '6px' },
-  row: { display: 'flex', gap: '12px' },
-  rowFlex: { display: 'flex' },
-  col: { flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' },
-  colRelative: { flex: 1, display: 'flex', flexDirection: 'column', gap: '6px', position: 'relative' },
-  label: { fontSize: '11px', color: '#64748b', fontWeight: 'bold', fontFamily: '"Siemreap", sans-serif' },
-  labelWithIcon: { fontSize: '11px', color: '#64748b', fontWeight: 'bold', display: 'flex', alignItems: 'center', fontFamily: '"Siemreap", sans-serif' },
-  inputWrapper: { position: 'relative', width: '100%' },
-  inputIcon: { position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', display: 'flex', alignItems: 'center' },
-  input: { width: '100%', boxSizing: 'border-box', padding: '10px 12px', paddingLeft: '12px', fontSize: '16px', borderRadius: '12px', border: '1px solid #e2e8f0', backgroundColor: '#ffffff', color: '#1e293b', outline: 'none', fontFamily: '"Battambang", sans-serif' },
-  inputLarge: { padding: '12px 12px', fontSize: '18px', fontWeight: 'bold' },
-  select: { width: '100%', boxSizing: 'border-box', padding: '10px', fontSize: '16px', borderRadius: '12px', border: '1px solid #e2e8f0', backgroundColor: '#ffffff', color: '#334155', outline: 'none', fontFamily: '"Battambang", sans-serif' },
-  rateCard: { marginTop: '8px', backgroundColor: '#fff1f2', borderRadius: '12px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px' },
-  rateHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px', color: '#64748b', fontFamily: '"Siemreap", sans-serif' },
-  rateValueRose: { fontSize: '16px', fontWeight: '900', color: '#e11d48' },
-  rateFooter: { display: 'flex', justifyContent: 'space-between', paddingTop: '6px', borderTop: '1px solid rgba(226,232,240,0.5)', fontSize: '10px', color: '#64748b' },
-  sectionHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px', paddingLeft: '2px' },
-  sectionTitle: { fontSize: '12px', color: '#334155', fontWeight: 'bold', display: 'flex', alignItems: 'center', fontFamily: '"Siemreap", sans-serif' },
-  toggleGroup: { display: 'flex', backgroundColor: '#f1f5f9', padding: '2px', borderRadius: '8px' },
-  toggleBtn: { padding: '4px 8px', fontSize: '10px', fontWeight: 'bold', border: 'none', background: 'none', color: '#94a3b8', borderRadius: '6px', cursor: 'pointer', fontFamily: '"Siemreap", sans-serif', display: 'flex', alignItems: 'center' },
-  toggleActiveRose: { padding: '4px 8px', fontSize: '10px', fontWeight: 'bold', border: 'none', backgroundColor: '#ffffff', color: '#e11d48', borderRadius: '6px', cursor: 'pointer', fontFamily: '"Siemreap", sans-serif', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center' },
-  textarea: { width: '100%', boxSizing: 'border-box', padding: '12px', fontSize: '16px', borderRadius: '12px', border: '1px dashed #cbd5e1', backgroundColor: '#f8fafc', color: '#334155', minHeight: '90px', resize: 'none', outline: 'none', fontFamily: '"Battambang", sans-serif' },
-  textareaActive: { width: '100%', boxSizing: 'border-box', padding: '12px', fontSize: '16px', borderRadius: '12px', border: '1px dashed #fda4af', backgroundColor: '#fff1f2', color: '#334155', minHeight: '90px', resize: 'none', outline: 'none', fontFamily: '"Battambang", sans-serif' },
-  clearBtn: { position: 'absolute', top: '8px', right: '8px', background: 'none', border: 'none', color: '#cbd5e1', cursor: 'pointer' },
-  logCard: { marginTop: '8px', backgroundColor: '#ffffff', border: '1px solid #f1f5f9', borderRadius: '8px', padding: '10px', fontSize: '10px' },
-  logTitle: { fontWeight: 'bold', color: '#64748b', borderBottom: '1px solid #f1f5f9', paddingBottom: '4px', marginBottom: '6px' },
-  logRow: { display: 'flex', justifyContent: 'space-between', color: '#64748b', marginBottom: '4px' },
-  logText: { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' },
-  logValues: { display: 'flex', gap: '6px', fontWeight: 'bold' },
-  otResultCard: { backgroundColor: '#f8fafc', borderRadius: '12px', padding: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', border: '1px solid #f1f5f9' },
-  otResultCol: { flex: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '2px' },
-  borderLeftRight: { borderLeft: '1px solid #e2e8f0', borderRight: '1px solid #e2e8f0' },
-  otResultLabel: { fontSize: '10px', color: '#94a3b8', fontWeight: 'bold', fontFamily: '"Siemreap", sans-serif' },
-  otResultHours: { fontSize: '14px', fontWeight: 'bold', color: '#334155' },
-  otResultMoneyOrange: { fontSize: '10px', fontWeight: 'bold', color: '#f97316' },
-  otResultMoneyRose: { fontSize: '10px', fontWeight: 'bold', color: '#e11d48' },
-  otResultMoneyEmerald: { fontSize: '14px', fontWeight: 'bold', color: '#10b981' },
-  floatingMoneyOrange: { fontSize: '10px', fontWeight: 'bold', color: '#f97316', marginTop: '4px', marginLeft: '4px' },
-  floatingMoneyRose: { fontSize: '10px', fontWeight: 'bold', color: '#e11d48', marginTop: '4px', marginLeft: '4px' },
-  rowTopMargin: { display: 'flex', gap: '12px', paddingTop: '12px', marginTop: '12px', borderTop: '1px solid rgba(226,232,240,0.6)' },
-  currencyToggle: { display: 'flex', backgroundColor: '#f8fafc', padding: '4px', borderRadius: '12px' },
-  currencyBtn: { flex: 1, padding: '6px', fontSize: '13px', fontWeight: 'bold', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontFamily: '"Siemreap", sans-serif' },
-  currencyActive: { flex: 1, padding: '6px', fontSize: '13px', fontWeight: 'bold', backgroundColor: '#ffffff', border: 'none', color: '#4f46e5', borderRadius: '8px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', cursor: 'pointer', fontFamily: '"Siemreap", sans-serif' },
-  resultCard: { marginTop: '24px', borderRadius: '16px', padding: '20px', color: '#ffffff', position: 'relative', overflow: 'hidden' },
-  bgGradRose: { backgroundImage: 'linear-gradient(to bottom right, #f43f5e, #f97316)' },
-  bgGradIndigo: { backgroundImage: 'linear-gradient(to bottom right, #4f46e5, #7c3aed)' },
-  bgGradEmerald: { backgroundImage: 'linear-gradient(to bottom right, #10b981, #14b8a6)' },
-  resultTitle: { fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', color: 'rgba(255,255,255,0.8)', marginBottom: '12px', display: 'flex', alignItems: 'center', fontFamily: '"Siemreap", sans-serif' },
-  resultRow: { display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'rgba(255,255,255,0.9)' },
-  resultTotalRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', paddingTop: '12px', marginTop: '8px', borderTop: '1px solid rgba(255,255,255,0.2)' },
-  resultTotalLabel: { fontSize: '14px', fontWeight: 'bold', color: 'rgba(255,255,255,0.9)', paddingBottom: '2px', fontFamily: '"Siemreap", sans-serif' },
-  resultTotalValue: { fontSize: '28px', fontWeight: '900', lineHeight: 1 }
-};
+        document.getElementById('rLT').innerText = rtL;
+        document.getElementById('rVT').innerText = rtV;
+    }
+
+    function calcSalary() {
+        const b = parseFloat(document.getElementById('baseSalary').value) || 0;
+        const d = parseFloat(document.getElementById('workDays').value) || 26;
+        const h = parseFloat(document.getElementById('workHours').value) || 8;
+        const ex = parseFloat(document.getElementById('bonus').value) || 0;
+        const de = parseFloat(document.getElementById('deduct').value) || 0;
+
+        hourlyRate = b>0 ? (b/d)/h : 0;
+        const otAmt150 = ot150 * hourlyRate * 1.5;
+        const otAmt200 = ot200 * hourlyRate * 2;
+        const otAmt = otAmt150 + otAmt200;
+        const net = b + otAmt + ex - de;
+
+        // Update Summary Money if visible
+        if(!document.getElementById('otSummary').classList.contains('hidden')) {
+            document.getElementById('sum150m').innerText = '=$' + fmt(otAmt150);
+            document.getElementById('sum200m').innerText = '=$' + fmt(otAmt200);
+        }
+
+        updateRes('ប្រាក់ខែគោល', '$'+fmt(b), otAmt>0?'+$'+fmt(otAmt):null, ex>0?'+$'+fmt(ex):null, de>0?'-$'+fmt(de):null, 'ប្រាក់ខែជាក់ស្តែង៖', '$'+fmt(net));
+    }
+
+    function calcInterest() {
+        const p = parseFloat(document.getElementById('principal').value) || 0;
+        const r = parseFloat(document.getElementById('intRate').value) || 0;
+        const d = parseFloat(document.getElementById('duration').value) || 0;
+        const rt = document.getElementById('intRateType').value;
+        const dt = document.getElementById('durationType').value;
+
+        const rpm = rt === 'year' ? r/12 : r;
+        const dm = dt === 'year' ? d*12 : d;
+        const int = p * (rpm/100) * dm;
+
+        document.getElementById('rRowOT').querySelector('span').innerText = 'ការប្រាក់សរុប';
+        updateRes('ប្រាក់ដើម', sym(curr)+fmt(p,curr), '+'+sym(curr)+fmt(int,curr), null, null, 'សរុប៖', sym(curr)+fmt(p+int,curr));
+    }
+
+    function calcDiscount() {
+        const p = parseFloat(document.getElementById('origPrice').value) || 0;
+        const d = parseFloat(document.getElementById('discPercent').value) || 0;
+        const save = p * (d/100);
+
+        document.getElementById('rRowOT').querySelector('span').innerText = 'បានបញ្ចុះតម្លៃ';
+        updateRes('តម្លៃដើម', '$'+fmt(p), '-$'+fmt(save), null, null, 'ត្រូវបង់៖', '$'+fmt(p-save), true);
+    }
+</script>
+
+</body>
+</html>
 
 
