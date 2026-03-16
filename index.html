@@ -91,6 +91,29 @@
         }
         .ot-toggle-btn.active { background: var(--surface); color: var(--theme); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
+        /* OT Settings */
+        .ot-settings-container {
+            background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 12px; margin-bottom: 12px;
+            display: none; animation: fadeIn 0.3s ease;
+        }
+        .ot-settings-container.show { display: block; }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; color: var(--text-muted); font-family: 'Siemreap'; }
+        .setting-row:last-child { margin-bottom: 0; }
+        .setting-input { 
+            width: 80px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border); 
+            background: var(--bg); font-size: 12px; font-weight: 600; color: var(--text-main); 
+            text-align: center; outline: none; font-family: 'Battambang'; 
+        }
+        .setting-input:focus { border-color: var(--theme); background: #fff; }
+        .settings-toggle-btn {
+            display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-muted); 
+            background: none; border: none; cursor: pointer; padding: 4px 8px; font-family: 'Siemreap';
+            border-radius: 6px; transition: 0.2s; margin-bottom: 8px;
+        }
+        .settings-toggle-btn:hover { background: var(--input-bg); color: var(--theme); }
+        .settings-toggle-btn svg { transition: transform 0.3s; }
+        .settings-toggle-btn.open svg { transform: rotate(180deg); }
+
         /* Smart Paste Specifics */
         .paste-area-wrapper { position: relative; }
         textarea { min-height: 100px; padding: 16px; resize: none; border: 2px dashed #cbd5e1; line-height: 1.5; }
@@ -154,7 +177,7 @@
             </div>
             <div>
                 <h1 class="header-title font-title">កម្មវិធីគណនារហ័ស</h1>
-                <div class="header-sub">គណនារហ័ស និង ងាយស្រួល ហើយត្រឹមត្រូវ</div>
+                <div class="header-sub">គណនារហ័ស និង ងាយស្រួល</div>
             </div>
         </div>
 
@@ -177,7 +200,7 @@
         <!-- ==================== SALARY TAB ==================== -->
         <div id="salaryContent">
             <div class="form-group">
-                <label>ប្រាក់ខែគោល (Base Salary)</label>
+                <label>ប្រាក់ខែគោល</label>
                 <div class="input-wrapper">
                     <div class="input-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
                     <input type="number" id="baseSalary" placeholder="0.00" oninput="calcSalary()">
@@ -201,7 +224,7 @@
                 </div>
             </div>
 
-            <!-- អត្រាប្រាក់ក្នុង ១ ម៉ោង (លាក់ជាធម្មតា បង្ហាញពេលវាយប្រាក់ខែ) -->
+            <!-- អត្រាប្រាក់ក្នុង ១ ម៉ោង -->
             <div id="rateAlert" class="rate-alert hidden">
                 <div class="rate-header">
                     <span class="rate-title">អត្រា 1ម៉ោង (100%)</span>
@@ -228,10 +251,33 @@
                     </div>
                 </div>
 
+                <!-- OT Settings Toggle -->
+                <button class="settings-toggle-btn" id="settingsToggleBtn" onclick="toggleSettings()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    កំណត់ម៉ោង OT (Settings)
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+
+                <div id="otSettingsContainer" class="ot-settings-container">
+                    <div class="setting-row">
+                        <span>ម៉ោងធ្វើការ (100%):</span>
+                        <div style="display:flex; gap:6px; align-items:center;">
+                            <input type="time" id="setNormalStart" class="setting-input" value="08:00" onchange="parseOT()">
+                            <span>-</span>
+                            <input type="time" id="setNormalEnd" class="setting-input" value="17:00" onchange="parseOT()">
+                        </div>
+                    </div>
+                    <div class="setting-row">
+                        <span>ម៉ោងថែម (150%) ដល់:</span>
+                        <input type="time" id="set150End" class="setting-input" value="22:00" onchange="parseOT()">
+                    </div>
+                    <div style="font-size:10px; color:#94a3b8; margin-top:8px; text-align:right;">*ក្រៅពីម៉ោងនេះ គិតជា 200% ស្វ័យប្រវត្តិ</div>
+                </div>
+
                 <!-- Paste Mode UI -->
                 <div id="modePasteUI">
                     <div class="paste-area-wrapper">
-                        <textarea id="pasteText" class="paste-area" placeholder="Copy ម៉ោងរបស់អ្នកហើយ Paste ទីនេះ...&#10;" oninput="parseOT()"></textarea>
+                        <textarea id="pasteText" class="paste-area" placeholder="Copy ម៉ោងរបស់អ្នកហើយ Paste ទីនេះ...&#10;ឧ.18:00-23:00(3$)" oninput="parseOT()"></textarea>
                         <button class="clear-btn" onclick="clearPaste()">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                         </button>
@@ -251,7 +297,7 @@
                             <div class="ot-money" style="color: #e11d48;" id="sum200m">+$0.00</div>
                         </div>
                         <div class="ot-col">
-                            <div class="ot-label">លុយបាយ</div>
+                            <div class="ot-label">ប្រាក់បាយ</div>
                             <div class="ot-val" style="color: #10b981;" id="sumMeal">$0.00</div>
                         </div>
                     </div>
@@ -379,6 +425,7 @@
     let currentTab = 'salary';
     let otMode = 'paste';
     let curr = 'USD';
+    let isSettingsOpen = false;
     
     // Global data
     let sData = { base: 0, hr: 0, r150: 0, r200: 0, ot150h: 0, ot200h: 0, otMeal: 0 };
@@ -425,7 +472,6 @@
         calcInterest();
     }
 
-    // Toggle OT Mode (Paste / Manual)
     function toggleOTMode(mode) {
         otMode = mode;
         document.getElementById('modePasteBtn').classList.toggle('active', mode === 'paste');
@@ -434,11 +480,24 @@
         if(mode === 'paste') {
             document.getElementById('modePasteUI').classList.remove('hidden');
             document.getElementById('modeManualUI').classList.add('hidden');
-            parseOT(); // Re-calculate based on paste text
+            parseOT();
         } else {
             document.getElementById('modePasteUI').classList.add('hidden');
             document.getElementById('modeManualUI').classList.remove('hidden');
-            handleManualOT(); // Re-calculate based on manual inputs
+            handleManualOT();
+        }
+    }
+
+    function toggleSettings() {
+        isSettingsOpen = !isSettingsOpen;
+        const btn = document.getElementById('settingsToggleBtn');
+        const container = document.getElementById('otSettingsContainer');
+        if(isSettingsOpen) {
+            btn.classList.add('open');
+            container.classList.add('show');
+        } else {
+            btn.classList.remove('open');
+            container.classList.remove('show');
         }
     }
 
@@ -447,6 +506,13 @@
         ta.value = '';
         ta.classList.remove('has-text');
         parseOT();
+    }
+
+    // Helper: Convert "HH:MM" to minutes
+    function timeToMins(timeStr) {
+        if(!timeStr) return 0;
+        const [h, m] = timeStr.split(':');
+        return parseInt(h) * 60 + parseInt(m);
     }
 
     function parseOT() {
@@ -468,6 +534,11 @@
         let t150 = 0, t200 = 0, tMeal = 0, html = '<div class="font-title" style="font-weight:700; color:var(--text-muted); margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:4px;">លទ្ធផលអាន៖</div>';
         let hasValidLine = false;
 
+        // Get Settings Values
+        const normStart = timeToMins(document.getElementById('setNormalStart').value || "08:00");
+        const normEnd = timeToMins(document.getElementById('setNormalEnd').value || "17:00");
+        const ot150End = timeToMins(document.getElementById('set150End').value || "22:00");
+
         const tRegex = /(\d{1,2})[:;](\d{2})\s*-\s*(\d{1,2})[:;](\d{2})/;
         const mRegex = /\((\d+(?:\.\d+)?)\$\)/;
 
@@ -478,10 +549,20 @@
             if(tm) {
                 found = true; hasValidLine = true;
                 let s = parseInt(tm[1])*60 + parseInt(tm[2]), e = parseInt(tm[3])*60 + parseInt(tm[4]);
-                if(e <= s) e += 1440;
+                if(e <= s) e += 1440; // Crossed midnight
+                
                 for(let i=s; i<e; i++) {
                     let m = i % 1440;
-                    if(m >= 1080 && m < 1320) l150++; else l200++;
+                    
+                    // Check if it's normal working hour
+                    let isNormal = normStart <= normEnd ? (m >= normStart && m < normEnd) : (m >= normStart || m < normEnd);
+                    // Check if it falls into 150% bracket (usually from normEnd to ot150End)
+                    let is150 = normEnd <= ot150End ? (m >= normEnd && m < ot150End) : (m >= normEnd || m < ot150End);
+
+                    if (!isNormal) {
+                        if (is150) l150++;
+                        else l200++;
+                    }
                 }
                 t150 += l150; t200 += l200;
             }
@@ -500,8 +581,8 @@
         
         if(hasValidLine) {
             logBox.innerHTML = html; logBox.style.display = 'block';
-            document.getElementById('sum150h').innerText = sData.ot150h;
-            document.getElementById('sum200h').innerText = sData.ot200h;
+            document.getElementById('sum150h').innerText = parseFloat(sData.ot150h.toFixed(2));
+            document.getElementById('sum200h').innerText = parseFloat(sData.ot200h.toFixed(2));
             document.getElementById('sumMeal').innerText = '$' + fmt(sData.otMeal);
             summary.classList.remove('hidden');
         } else {
@@ -553,7 +634,6 @@
         sData.r150 = sData.hr * 1.5;
         sData.r200 = sData.hr * 2.0;
 
-        // Show/Hide Hourly Rate Alert
         const alertBox = document.getElementById('rateAlert');
         if(b > 0) {
             alertBox.classList.remove('hidden');
@@ -569,7 +649,6 @@
         const otAmt = otAmt150 + otAmt200;
         const net = b + otAmt + ex - de;
 
-        // Update Summary Money or Hint Money based on mode
         if(otMode === 'paste') {
             document.getElementById('sum150m').innerText = '+$' + fmt(otAmt150);
             document.getElementById('sum200m').innerText = '+$' + fmt(otAmt200);
